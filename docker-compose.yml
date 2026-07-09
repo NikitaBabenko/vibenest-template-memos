@@ -2,11 +2,19 @@ services:
   memos:
     image: neosmemo/memos:stable
     restart: unless-stopped
+    environment:
+      MEMOS_MODE: prod
     ports:
       - "5230:5230"
+    expose:
+      - "5230"
     volumes:
       - memos-data:/var/opt/memos
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5230/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
 
 volumes:
   memos-data:
-
